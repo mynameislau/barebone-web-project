@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Test</title>
+  {{>scriptinclude list=jsSourceOrder.head}}
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+  {{>header}}
+  <main class="content {{contentClass}}">
+    {{>body}}
+  </main>
+  {{>scriptinclude list=jsSourceOrder.flow}}
+  {{#>additionalscripting}}{{/additionalscripting}}
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "name": "MutationObserver-shim",
+  "homepage": "https://github.com/megawac/MutationObserver.js",
+  "version": "0.3.1",
+  "_release": "0.3.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.3.1",
+    "commit": "a5103da8267c352803c79223085eb8a5be957ba9"
+  },
+  "_source": "git://github.com/megawac/MutationObserver.js.git",
+  "_target": "^0.3.1",
+  "_originalSource": "MutationObserver-shim",
+  "_direct": true
+}

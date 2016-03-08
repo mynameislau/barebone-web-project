@@ -1,0 +1,28 @@
+{
+  "name": "igesa",
+  "description": "",
+  "main": "gulpfile.js",
+  "authors": [
+    "Laurent Falda <l.falda@groupe-scala.com>"
+  ],
+  "license": "ISC",
+  "moduleType": [],
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "src/js/vendors",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "html5shiv": "^3.7.3",
+    "jquery": "^2.2.0",
+    "svg4everybody": "^2.0.3",
+    "webfontloader": "^1.6.21",
+    "promise-polyfill": "^3.1.0",
+    "MutationObserver-shim": "^0.3.1",
+    "picturefill": "^3.0.2"
+  }
+}

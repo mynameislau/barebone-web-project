@@ -1,0 +1,7 @@
+{{#each list}}
+  {{#if ie}}
+   <!--[if lt IE {{ie}}]><script src="{{src}}"></script><![endif]-->
+  {{else}}
+  <script src="{{src}}"{{#if async}} async{{/if}}{{#if defer}} defer{{/if}}></script>
+  {{/if}}
+{{/each}}
