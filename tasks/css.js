@@ -8,32 +8,52 @@ const del = require('del');
 const fs = require('fs');
 const browserSync = require('browser-sync');
 const stylelint = require('stylelint');
+const cleanCSS = require('gulp-clean-css');
 
 gulp.task('css', ['compileSass'], () => {
   gulp.watch(['src/scss/**/*.scss'], ['compileSass']);
 });
 
-gulp.task('compileSass', cb =>
-{
-  del('dev/css').then(() =>
+const compileSass = (cb, dist) => {
+  const dest = dist ? 'dist/css' : 'dev/css';
+
+  del(dest).then(() =>
   {
     const glob = ['src/scss/*.scss', '!src/scss/_*.scss'];
-    const stream = gulp.src(glob);
 
-    stream.pipe(sourcemaps.init())
+    let stream = gulp.src(glob)
+    .pipe(sourcemaps.init())
     .pipe(sass())
     .on('error', error => {
       console.error(error);
       beep(4);
       cb();
-    })
-    .pipe(sourcemaps.write())
-    .pipe(gulp.dest('dev/css'))
+    });
+
+    if (dist) {
+      stream = stream.pipe(cleanCSS())
+      .pipe(sourcemaps.write('./'));
+    }
+    else {
+      stream = stream.pipe(sourcemaps.write());
+    }
+
+    stream.pipe(gulp.dest(dest))
     .on('end', cb)
     .pipe(browserSync.stream());
   }).catch(error => console.error(error));
+};
+
+gulp.task('compileSassDist', cb => {
+  compileSass(cb, true);
+});
+
+gulp.task('compileSass', cb =>
+{
+  compileSass(cb);
 });
 
 module.exports = {
-  autoTask: 'css'
+  autoTask: 'css',
+  distTask: 'compileSassDist'
 };

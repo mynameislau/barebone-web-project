@@ -25,30 +25,33 @@ const handlebarsOptions = {
 
 let templateData;
 
-const buildTemplates = cb =>
+const buildTemplates = dist => new Promise((resolve, reject) =>
 {
-  del('dev/*.html').then(() => {
+  const dir = dist ? 'dist' : 'dev';
+  del(`${dir}/*.html`).then(() => {
     const stream = gulp.src('src/templates/pages/*.hbs')
     .pipe(handlebars(templateData, handlebarsOptions))
     .on('error', error =>
     {
       console.error('templating error - ', error);
       stream.emit('end');
+      reject(error);
     })
     .pipe(rename(path => path.extname = '.html'))
-    .pipe(gulp.dest('dev/'))
+    .pipe(gulp.dest(`${dir}/`))
     .on('error', error =>
     {
       console.error(error);
       stream.emit('end');
+      reject(error);
     })
     .on('end', () => {
-      cb();
+      resolve();
       browserSync.reload();
       emitter.emit('pagesCreated');
     });
   });
-};
+});
 
 gulp.task('setTemplateData', ['createJSFilesArray'], cb =>
 {
@@ -67,9 +70,11 @@ gulp.task('templating', ['buildTemplates'], () => {
 });
 
 gulp.task('buildTemplates', ['setTemplateData'], buildTemplates);
-gulp.task('rebuildTemplates', buildTemplates);
+gulp.task('rebuildTemplates', () => buildTemplates());
+gulp.task('buildTemplatesDist', ['setTemplateData'], () => buildTemplates(true));
 
 module.exports = {
   emitter: emitter,
-  autoTask: 'templating'
+  autoTask: 'templating',
+  distTask: 'buildTemplatesDist'
 };

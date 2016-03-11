@@ -1,0 +1,1 @@
+!function(){"use strict";window.scala.documentReady.then(function(){var t=window.Bliss,i=window.Bliss.$;i('[role="tooltip"]').forEach(function(i){var e=t('[aria-controls="'+i.getAttribute("id")+'"]');e.addEventListener("click",function(){var t="true"===i.getAttribute("aria-hidden");i.setAttribute("aria-hidden",t?"false":"true")})})})}();
