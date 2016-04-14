@@ -23,11 +23,10 @@ const compileSass = (cb, dist) => {
 
     let stream = gulp.src(glob)
     .pipe(sourcemaps.init())
-    .pipe(sass())
+    .pipe(sass({ outputStyle: 'expanded' }))
     .on('error', error => {
-      console.error(error);
+      sass.logError.call(stream, error);
       beep(4);
-      cb();
     });
 
     if (dist) {
@@ -40,7 +39,7 @@ const compileSass = (cb, dist) => {
 
     stream.pipe(gulp.dest(dest))
     .on('end', cb)
-    .pipe(browserSync.stream());
+    .pipe(browserSync.get(dist ? 'dist' : 'dev').stream());
   }).catch(error => console.error(error));
 };
 

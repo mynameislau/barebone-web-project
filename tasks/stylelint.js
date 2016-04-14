@@ -24,7 +24,8 @@ gulp.task('checkStyle', cb => {
   });
 });
 
-gulp.task('stylelint', ['checkStyle'], () => {
+gulp.task('stylelint', ['checkStyle'], cb => {
+  cb();
   gulp.watch(glob, ['checkStyle']);
 });
 

@@ -5,7 +5,7 @@ const rename = require('gulp-rename');
 const handlebars = require('gulp-compile-handlebars');
 const browserSync = require('browser-sync');
 const del = require('del');
-const YAML = require('js-yaml');
+const YAML = require('yamljs');
 const fs = require('fs');
 const javascript = require('./javascript.js');
 // const cache = require('gulp-cached');
@@ -33,7 +33,8 @@ const buildTemplates = dist => new Promise((resolve, reject) =>
     .pipe(handlebars(templateData, handlebarsOptions))
     .on('error', error =>
     {
-      console.error('templating error - ', error);
+      //console.error('templating error - ', error);
+      process.stderr.write(error + '\n');
       stream.emit('end');
       reject(error);
     })
@@ -47,21 +48,21 @@ const buildTemplates = dist => new Promise((resolve, reject) =>
     })
     .on('end', () => {
       resolve();
-      browserSync.reload();
+      browserSync.get(dir).reload();
       emitter.emit('pagesCreated');
     });
   });
 });
 
-gulp.task('setTemplateData', ['createJSFilesArray'], cb =>
+gulp.task('setTemplateData', ['rebuildJS'], () => new Promise((resolve, reject) =>
 {
   fs.readFile(templateDataPath, (error, data) =>
   {
-    templateData = YAML.load(data.toString());
+    templateData = YAML.parse(data.toString());
     templateData.jsSourceOrder = javascript.sourceOrder;
-    cb();
+    resolve();
   });
-});
+}));
 
 gulp.task('templating', ['buildTemplates'], () => {
   gulp.watch('src/templates/**/*.hbs', ['rebuildTemplates']);
@@ -69,7 +70,7 @@ gulp.task('templating', ['buildTemplates'], () => {
   gulp.watch(javascript.sourceOrderPath, ['buildTemplates']);
 });
 
-gulp.task('buildTemplates', ['setTemplateData'], buildTemplates);
+gulp.task('buildTemplates', ['setTemplateData'], () => buildTemplates());
 gulp.task('rebuildTemplates', () => buildTemplates());
 gulp.task('buildTemplatesDist', ['setTemplateData'], () => buildTemplates(true));
 

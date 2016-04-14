@@ -1,0 +1,12 @@
+---
+  extends: airbnb
+  env:
+    es6: true
+    browser: false
+  #old es
+  rules:
+    no-var: 0
+    vars-on-top: 0
+    func-names: 0
+    prefer-arrow-callback: 0
+    prefer-template: 0

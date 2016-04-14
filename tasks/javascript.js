@@ -2,21 +2,22 @@
 
 const gulp = require('gulp');
 const browserSync = require('browser-sync');
+const sourcemaps = require('gulp-sourcemaps');
 const fs = require('fs');
 const path = require('path');
 const del = require('del');
 const concat = require('gulp-concat');
 const uglify = require('gulp-uglify');
+const YAML = require('yamljs');
 // const Events = require('events');
 
-const jsSourceOrderPath = 'src/data/javascript_source_order.json';
+const jsSourceOrderPath = 'src/data/javascript_source_order.yaml';
 // const emitter = new Events();
 
 let sourceOrder;
 
 const copyJSFiles = dist => new Promise((resolve, reject) =>
 {
-  console.log('copying');
   const dir = dist ? 'dist' : 'dev';
 
   del(`${dir}/js/*`).then(() => {
@@ -34,34 +35,23 @@ const copyJSFiles = dist => new Promise((resolve, reject) =>
       if (entry.bundle)
       {
         const gulpSRC = entry.bundle.map(entry => `src/${entry.src}`);
-        //console.log(entry.src, gulpSRC);
         stream = gulp.src(gulpSRC)
+        .pipe(sourcemaps.init())
         .pipe(concat(entry.src));
         dest = dir;
-        /*.pipe(gulp.dest(dir))
-        .on('end', resolve)
-        .on('error', error => {
-          console.error(error);
-          reject(error);
-        });*/
       }
       else
       {
-        console.log('else', [`${dir}/${entry.src}`]);
         stream = gulp.src(`src/${entry.src}`)
+        .pipe(sourcemaps.init())
         .on('error', error => console.error(error));
         dest = path.dirname(`${dir}/${entry.src}`);
-        /*.pipe(gulp.dest(path.dirname(`${dir}/${entry.src}`)))
-        .on('end', resolve)
-        .on('error', error => {
-          console.error(error);
-          reject(error);
-        });*/
       }
 
       if (dist) { stream = stream.pipe(uglify()); }
 
-      stream.pipe(gulp.dest(dest))
+      stream.pipe(sourcemaps.write('./'))
+      .pipe(gulp.dest(dest))
       .on('end', resolve)
       .on('error', error => {
         console.error(error);
@@ -77,7 +67,7 @@ const isExternal = function (entry) {
 
 const getSourceOrder = function (data) {
   const src = {};
-  const parsed = JSON.parse(data);
+  const parsed = YAML.parse(data);
   for (var name in parsed)
   {
     src[name] = [];
@@ -114,7 +104,7 @@ const createJSFilesArray = () => new Promise((resolve, reject) =>
   fs.readFile(jsSourceOrderPath, (err, data) =>
   {
     try {
-      sourceOrder = getSourceOrder(data);
+      sourceOrder = getSourceOrder(data.toString());
       resolve();
     }
     catch (error)
@@ -133,7 +123,7 @@ gulp.task('copyJSFiles', cb =>
   copyJSFiles().then(() => {
     cb();
     // emitter.emit('JSFilesCopied');
-    browserSync.reload();
+    browserSync.get('dev').reload();
   });
 });
 gulp.task('rebuildJS', ['createJSFilesArray'], cb =>

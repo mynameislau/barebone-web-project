@@ -8,6 +8,9 @@ const path = require('path');
 let autoTasksNames;
 let distTasksNames;
 
+browserSync.create('dist');
+browserSync.create('dev');
+
 const taskFilenames = fs.readdirSync('./tasks');
 const taskModules = [];
 //auto requiring tasks
@@ -19,8 +22,7 @@ taskFilenames.forEach(path => {
 
 //default task starts subtasks
 gulp.task('default', autoTasksNames, () => {
-  browserSync.create();
-  browserSync.init({
+  browserSync.get('dev').init({
     server:
     {
       baseDir: './dev/'
@@ -30,8 +32,7 @@ gulp.task('default', autoTasksNames, () => {
 });
 
 gulp.task('dist', distTasksNames, () => {
-  browserSync.create();
-  browserSync.init({
+  browserSync.get('dist').init({
     server:
     {
       baseDir: './dist/'

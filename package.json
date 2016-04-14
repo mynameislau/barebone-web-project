@@ -4,7 +4,9 @@
   "description": "Gulp - Handlebars - Sass",
   "repository": "./",
   "main": "gulpfile.js",
-  "keywords": ["yeoman-generator"],
+  "keywords": [
+    "yeoman-generator"
+  ],
   "dependencies": {
     "gulp": "^3.9.0",
     "yeoman-generator": "latest"
@@ -25,10 +27,15 @@
     "gulp-sourcemaps": "^1.6.0",
     "gulp-uglify": "^1.5.3",
     "js-yaml": "^3.5.2",
-    "stylelint": "^4.5.0"
+    "stylelint": "^4.5.0",
+    "svg-symbols-map": "^1.0.0",
+    "yamljs": "^0.2.6"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start" : "gulp",
+    "dist" : "gulp dist",
+    "bower": "bower"
   },
   "author": "",
   "license": "ISC"

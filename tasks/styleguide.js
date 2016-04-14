@@ -35,7 +35,7 @@ templating.emitter.on('pagesCreated', rebuildLinks);
 
 gulp.task('styleguide', () => {
   rebuildLinks();
-  browserSync.create().init({
+  browserSync.create('styleguide').init({
     server:
     {
       baseDir: 'styleguide/dist/'
